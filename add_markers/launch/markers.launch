@@ -1,0 +1,25 @@
+<launch>
+  <node name="add_markers" pkg="add_markers" type="add_markers"/>
+
+
+  <!-- Initial position -->
+  <param name="/init_marker_pose_x" type="double" value="1.2" />
+  <param name="/init_marker_pose_y" type="double" value="-5.4" />
+  <param name="/init_marker_pose_z" type="double" value="0.0" />
+  
+  <param name="/init_marker_orient_x" type="double" value="0.0" />
+  <param name="/init_marker_orient_y" type="double" value="0.0" />
+  <param name="/init_marker_orient_z" type="double" value="0.0" />
+  <param name="/init_marker_orient_w" type="double" value="1.0" />
+
+
+  <!-- Final position -->
+  <param name="/dest_marker_pose_x" type="double" value="-2.3" />
+  <param name="/dest_marker_pose_y" type="double" value="2.6" />
+  <param name="/dest_marker_pose_z" type="double" value="0.0" />
+  
+  <param name="/dest_marker_orient_x" type="double" value="0.0" />
+  <param name="/dest_marker_orient_y" type="double" value="0.0" />
+  <param name="/dest_marker_orient_z" type="double" value="0.0" />
+  <param name="/dest_marker_orient_w" type="double" value="1.0" />
+</launch>

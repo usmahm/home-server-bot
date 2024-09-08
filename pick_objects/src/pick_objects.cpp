@@ -1,0 +1,115 @@
+#include <ros/ros.h>
+#include <std_msgs/Bool.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+ 
+// Define a client for to send goal requests to the move_base server through a SimpleActionClient
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+
+int main(int argc, char** argv){
+  // Initialize the simple_navigation_goals node
+  ros::init(argc, argv, "pick_objects");
+  ros::NodeHandle n;
+  ros::Publisher pub = n.advertise<std_msgs::Bool>("/goal_reached", 10);
+  ros::Rate r(1);
+
+  // ros::Rate loop_rate(1);
+
+  double init_marker_pose_x, init_marker_pose_y, init_marker_pose_z;
+  double init_marker_orient_x, init_marker_orient_y, init_marker_orient_z, init_marker_orient_w;
+  n.getParam("/init_marker_pose_x", init_marker_pose_x);
+  n.getParam("/init_marker_pose_y", init_marker_pose_y);
+  n.getParam("/init_marker_pose_z", init_marker_pose_z);
+  n.getParam("/init_marker_orient_x", init_marker_orient_x);
+  n.getParam("/init_marker_orient_y", init_marker_orient_y);
+  n.getParam("/init_marker_orient_z", init_marker_orient_z);
+  n.getParam("/init_marker_orient_w", init_marker_orient_w);
+
+  double dest_marker_pose_x, dest_marker_pose_y, dest_marker_pose_z;
+  double dest_marker_orient_x, dest_marker_orient_y, dest_marker_orient_z, dest_marker_orient_w;
+  n.getParam("/dest_marker_pose_x", dest_marker_pose_x);
+  n.getParam("/dest_marker_pose_y", dest_marker_pose_y);
+  n.getParam("/dest_marker_pose_z", dest_marker_pose_z);
+  n.getParam("/dest_marker_orient_x", dest_marker_orient_x);
+  n.getParam("/dest_marker_orient_y", dest_marker_orient_y);
+  n.getParam("/dest_marker_orient_z", dest_marker_orient_z);
+  n.getParam("/dest_marker_orient_w", dest_marker_orient_w);
+  //tell the action client that we want to spin a thread by default
+  MoveBaseClient ac("move_base", true);
+
+  // Wait 5 sec for move_base action server to come up
+  while(!ac.waitForServer(ros::Duration(5.0))){
+    ROS_INFO("Waiting for the move_base action server to come up");
+  }
+
+  move_base_msgs::MoveBaseGoal goal_1;
+
+  // set up the frame parameters
+  goal_1.target_pose.header.frame_id = "base_link";
+  goal_1.target_pose.header.stamp = ros::Time::now();
+  
+  // Define a position and orientation for the robot to reach
+  goal_1.target_pose.pose.position.x = init_marker_pose_x;
+  goal_1.target_pose.pose.position.y = init_marker_pose_y;
+  goal_1.target_pose.pose.position.z = init_marker_pose_z;
+  goal_1.target_pose.pose.orientation.x = init_marker_orient_x;
+  goal_1.target_pose.pose.orientation.y = init_marker_orient_y;
+  goal_1.target_pose.pose.orientation.z = init_marker_orient_z;
+  goal_1.target_pose.pose.orientation.w = init_marker_orient_w;
+
+   // Send the goal_1 position and orientation for the robot to reach
+  ROS_INFO("Sending goal_1");
+  ac.sendGoal(goal_1);
+  
+  // Wait an infinite time for the results
+  ac.waitForResult();
+  
+  // Check if the robot reached its goal_1
+  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)  {
+    std_msgs::Bool msg;
+    msg.data = false;
+    pub.publish(msg);
+    
+    ROS_INFO("Hooray, the base moved 1 meter forward");
+  }
+  else
+    ROS_INFO("The base failed to move forward 1 meter for some reason");
+  
+  ros::Duration(5.0).sleep();
+
+  move_base_msgs::MoveBaseGoal goal_2;
+
+  goal_2.target_pose.header.frame_id = "base_link";
+  goal_2.target_pose.header.stamp = ros::Time::now();
+  
+  // Define a position and orientation for the robot to reach
+  // goal_2.target_pose.pose.position.x = 3.0;
+  // goal_2.target_pose.pose.orientation.w = 2.0;
+  goal_2.target_pose.pose.position.x = dest_marker_pose_x;
+  goal_2.target_pose.pose.position.y = dest_marker_pose_y;
+  goal_2.target_pose.pose.position.z = dest_marker_pose_z;
+  goal_2.target_pose.pose.orientation.x = dest_marker_orient_x;
+  goal_2.target_pose.pose.orientation.y = dest_marker_orient_y;
+  goal_2.target_pose.pose.orientation.z = dest_marker_orient_z;
+  goal_2.target_pose.pose.orientation.w = dest_marker_orient_w;
+
+   // Send the goal_2 position and orientation for the robot to reach
+  ROS_INFO("Sending goal_2");
+  ac.sendGoal(goal_2);
+  
+  // Wait an infinite time for the results
+  ac.waitForResult();
+  
+  // Check if the robot reached its goal_2
+  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
+    std_msgs::Bool msg;
+    msg.data = true;
+    pub.publish(msg);
+    ROS_INFO("Hooray, the base moved 3 meter forward");
+  }
+  else
+    ROS_INFO("The base failed to move forward 3 meter for some reason");
+  
+
+  return 0;
+}
