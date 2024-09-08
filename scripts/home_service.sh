@@ -2,13 +2,15 @@
 
 WORKSPACE_PATH=../../devel/setup.bash
 MAP_PATH=/home/usmahm/Desktop/learning/rda/nn/catkin_ws/src/map/map.yaml
+WORLD_PATH=/home/usmahm/Desktop/learning/rda/nn/catkin_ws/src/map/robotworld.world
+RVIZ_PATH=/home/usmahm/Desktop/learning/rda/nn/catkin_ws/src/rvizConfig/rvizconfig.rviz
 
 if [! -f "$WORKSPACE_PATH" ]; then
   echo "Error: could not find $WORKSPACE_PATH. Make sure you are in the correct directory"
   exit 1
 fi
 
-xterm -e " source $WORKSPACE_PATH; roslaunch turtlebot_gazebo turtlebot_world.launch" &
+xterm -e " source $WORKSPACE_PATH; roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=$WORLD_PATH" &
 sleep 10
 xterm -e " source $WORKSPACE_PATH; roslaunch turtlebot_gazebo amcl_demo.launch map_file:=$MAP_PATH" &
 sleep 10
