@@ -46,3 +46,9 @@ cd scripts
 chmod +x home_service.sh
 •/home_service.sh
 ```
+
+Below is a video of the running project
+
+
+https://github.com/user-attachments/assets/d8d2adee-c4bb-4280-aa09-471d78e0f2d6
+
