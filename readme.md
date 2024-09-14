@@ -9,9 +9,13 @@ The project's aim is to practice the skills I gained in the course. Listed below
 3. Navigation based on Dijkstra's algorithm.
 
 The packages I used to achieve the above are:
-1. SLAM_Gmapping for SLAM
-2. AMCL (Adaptive Monte Carlo Localization) for localization in the mapped environment
-3. ROS navigation stack was used for navigation to simulate picking and dropping off objects at specified locations, it uses Dijkstra's algorithm under the hood.
+1. AMCL (Adaptive Monte Carlo Localization) for localization in the mapped environment.
+   It uses a particle filter to estimate the robot's position in the environment. It does this by generating random pose estimates in intervals, it then compares those pose estimates to what its sensors (like the lidar and odometry) give to know which pose estimates are close to its true value. The estimates far from the true value are then dropped and a new set of estimates is generated based on the pose estimates that escaped dropping.
+  
+2. SLAM_Gmapping for SLAM to generate a 2D occupanncy grid map. This package requires that your model has a 2D ranger finder sensor like a lidar for range measurements and  odometry data to estimate the robot's movement. sensor data is used to update the map of the environment by marking obstacles (detected by the laser) and free space. As the robot moves, GMapping builds this map incrementally, updating it based on the robot's estimated position. It uses a particle filter to estimate the robot's position in the environment, this works in a similar way to how AMCL above works.
+
+
+3. ROS navigation stack was used for navigation planning to simulate picking and dropping off objects at specified locations, by planning the best path to its goal. It uses algorithms like Dijkstra's or A search* to find the optimal path based on the global map. The path avoids obstacles and follows the shortest or most efficient route to the goal.
 
 This project was done using ROS Kinetic which runs on Ubuntu 16.04LTS
 
