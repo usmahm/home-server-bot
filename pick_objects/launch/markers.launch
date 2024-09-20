@@ -1,7 +1,5 @@
 <launch>
-  <!-- t = true, f = false -->
-  <arg name="is_standalone" default="t" />
-  <node name="add_markers" pkg="add_markers" type="add_markers" output="screen">
+  <node name="pick_objects" pkg="pick_objects" type="pick_objects" output="screen">
     <!-- Initial position -->
     <param name="/init_marker_pose_x" type="double" value="1.3" />
     <param name="/init_marker_pose_y" type="double" value="-5.53" />
@@ -22,6 +20,5 @@
     <param name="/dest_marker_orient_y" type="double" value="0.0" />
     <param name="/dest_marker_orient_z" type="double" value="0.0" />
     <param name="/dest_marker_orient_w" type="double" value="1" />
-    <param name="/is_standalone" type="string" value="$(arg is_standalone)" />
   </node>
 </launch>
